@@ -94,6 +94,9 @@
         .contador.perigo {
             color: #ef4444;
         }
+        select option {
+            background: #1e1b4b;
+        }
     </style>
 </head>
 <body class="text-white">
@@ -103,7 +106,7 @@
             <div class="text-center mb-8">
                 <div class="text-5xl mb-3">🎙️</div>
                 <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Texto → WAV</h1>
-                <p class="text-sm text-gray-400 mt-2">Síntese de voz 100% offline | Até 1500 caracteres</p>
+                <p class="text-sm text-gray-400 mt-2">Síntese de voz 100% offline | 30+ idiomas | Até 1500 caracteres</p>
             </div>
 
             <!-- Área de texto com contador -->
@@ -117,25 +120,80 @@
                 <textarea id="texto" rows="6" class="w-full rounded-xl p-3 text-sm text-white placeholder-gray-500 resize-none" placeholder="Digite seu texto aqui... Suporte até 1500 caracteres!"></textarea>
             </div>
 
-            <!-- Seleção de voz -->
+            <!-- Seleção de voz com muitas opções -->
             <div class="mb-5">
                 <label class="block text-sm font-medium text-gray-300 mb-2">
-                    <span>🌐 Idioma</span>
+                    <span>🌐 Escolha o idioma/voz</span>
                 </label>
                 <select id="voz" class="w-full rounded-xl p-2.5 text-sm text-white">
-                    <option value="pt-BR">🇧🇷 Português (Brasil)</option>
-                    <option value="pt-PT">🇵🇹 Português (Portugal)</option>
-                    <option value="en-US">🇺🇸 Inglês (EUA)</option>
-                    <option value="en-GB">🇬🇧 Inglês (UK)</option>
-                    <option value="es-ES">🇪🇸 Espanhol</option>
-                    <option value="fr-FR">🇫🇷 Francês</option>
-                    <option value="de-DE">🇩🇪 Alemão</option>
-                    <option value="it-IT">🇮🇹 Italiano</option>
-                    <option value="ja-JP">🇯🇵 Japonês</option>
-                    <option value="ko-KR">🇰🇷 Coreano</option>
-                    <option value="ru-RU">🇷🇺 Russo</option>
-                    <option value="zh-CN">🇨🇳 Chinês (Simplificado)</option>
+                    <optgroup label="🇧🇷 Português">
+                        <option value="pt-BR">🇧🇷 Português (Brasil)</option>
+                        <option value="pt-PT">🇵🇹 Português (Portugal)</option>
+                    </optgroup>
+                    <optgroup label="🇬🇧 Inglês">
+                        <option value="en-US">🇺🇸 Inglês (EUA)</option>
+                        <option value="en-GB">🇬🇧 Inglês (UK)</option>
+                        <option value="en-AU">🇦🇺 Inglês (Austrália)</option>
+                        <option value="en-IN">🇮🇳 Inglês (Índia)</option>
+                        <option value="en-CA">🇨🇦 Inglês (Canadá)</option>
+                    </optgroup>
+                    <optgroup label="🇪🇸 Espanhol">
+                        <option value="es-ES">🇪🇸 Espanhol (Espanha)</option>
+                        <option value="es-MX">🇲🇽 Espanhol (México)</option>
+                        <option value="es-AR">🇦🇷 Espanhol (Argentina)</option>
+                        <option value="es-CO">🇨🇴 Espanhol (Colômbia)</option>
+                        <option value="es-CL">🇨🇱 Espanhol (Chile)</option>
+                    </optgroup>
+                    <optgroup label="🇫🇷 Francês">
+                        <option value="fr-FR">🇫🇷 Francês (França)</option>
+                        <option value="fr-CA">🇨🇦 Francês (Canadá)</option>
+                        <option value="fr-BE">🇧🇪 Francês (Bélgica)</option>
+                    </optgroup>
+                    <optgroup label="🇩🇪 Alemão">
+                        <option value="de-DE">🇩🇪 Alemão</option>
+                        <option value="de-AT">🇦🇹 Alemão (Áustria)</option>
+                        <option value="de-CH">🇨🇭 Alemão (Suíça)</option>
+                    </optgroup>
+                    <optgroup label="🇮🇹 Italiano">
+                        <option value="it-IT">🇮🇹 Italiano</option>
+                        <option value="it-CH">🇨🇭 Italiano (Suíça)</option>
+                    </optgroup>
+                    <optgroup label="🇯🇵 Asiático">
+                        <option value="ja-JP">🇯🇵 Japonês</option>
+                        <option value="ko-KR">🇰🇷 Coreano</option>
+                        <option value="zh-CN">🇨🇳 Chinês (Simplificado)</option>
+                        <option value="zh-TW">🇹🇼 Chinês (Tradicional)</option>
+                        <option value="hi-IN">🇮🇳 Hindi</option>
+                    </optgroup>
+                    <optgroup label="🇪🇺 Europeu">
+                        <option value="nl-NL">🇳🇱 Holandês</option>
+                        <option value="pl-PL">🇵🇱 Polonês</option>
+                        <option value="tr-TR">🇹🇷 Turco</option>
+                        <option value="el-GR">🇬🇷 Grego</option>
+                        <option value="cs-CZ">🇨🇿 Tcheco</option>
+                        <option value="hu-HU">🇭🇺 Húngaro</option>
+                        <option value="ro-RO">🇷🇴 Romeno</option>
+                        <option value="uk-UA">🇺🇦 Ucraniano</option>
+                    </optgroup>
+                    <optgroup label="🇳🇴 Nórdico">
+                        <option value="sv-SE">🇸🇪 Sueco</option>
+                        <option value="da-DK">🇩🇰 Dinamarquês</option>
+                        <option value="no-NO">🇳🇴 Norueguês</option>
+                        <option value="fi-FI">🇫🇮 Finlandês</option>
+                        <option value="is-IS">🇮🇸 Islandês</option>
+                    </optgroup>
+                    <optgroup label="🌍 Outros">
+                        <option value="ru-RU">🇷🇺 Russo</option>
+                        <option value="ar-SA">🇸🇦 Árabe</option>
+                        <option value="he-IL">🇮🇱 Hebraico</option>
+                        <option value="th-TH">🇹🇭 Tailandês</option>
+                        <option value="vi-VN">🇻🇳 Vietnamita</option>
+                        <option value="id-ID">🇮🇩 Indonésio</option>
+                        <option value="ms-MY">🇲🇾 Malaio</option>
+                        <option value="fil-PH">🇵🇭 Filipino</option>
+                    </optgroup>
                 </select>
+                <p class="text-xs text-gray-500 mt-1">✨ Mais de 40 opções de idiomas e variações regionais</p>
             </div>
 
             <!-- Controles -->
@@ -178,7 +236,7 @@
 
             <!-- Status -->
             <div id="status" class="text-center text-xs text-gray-400 py-2">
-                ✨ Pronto para gerar áudio (até 1500 caracteres)
+                ✨ Pronto para gerar áudio | 40+ idiomas disponíveis
             </div>
         </div>
     </div>
@@ -322,7 +380,7 @@
             elementos.btnGerar.disabled = true;
             elementos.btnOuvir.disabled = true;
             elementos.btnBaixar.disabled = true;
-            atualizarStatus(`🎙️ Gerando áudio (${texto.length} caracteres)...`, "info");
+            atualizarStatus(`🎙️ Gerando áudio em ${elementos.voz.options[elementos.voz.selectedIndex]?.text?.split(' ')[1] || elementos.voz.value}...`, "info");
             progresso(20);
             
             try {
@@ -334,7 +392,7 @@
                 try {
                     audioBlob = await gerarWAV(texto, idioma, vel, tom);
                     progresso(100);
-                    atualizarStatus("✅ Áudio gerado com sucesso!", "sucesso");
+                    atualizarStatus(`✅ Áudio gerado em ${elementos.voz.options[elementos.voz.selectedIndex]?.text?.split(' ')[1] || idioma}!`, "sucesso");
                 } catch {
                     audioBlob = fallbackWAV(texto);
                     progresso(100);
@@ -362,7 +420,8 @@
         
         elementos.btnBaixar.addEventListener('click', () => {
             if (!audioBlob || !audioUrl) return atualizarStatus("⚠️ Gere o áudio primeiro", "erro");
-            const nome = (elementos.texto.value.trim().slice(0, 30).replace(/[^a-z0-9]/gi, '_') || 'audio') + '_' + Date.now() + '.wav';
+            const idiomaSel = elementos.voz.options[elementos.voz.selectedIndex]?.text?.split(' ')[1] || 'audio';
+            const nome = `${idiomaSel}_${elementos.texto.value.trim().slice(0, 25).replace(/[^a-z0-9]/gi, '_') || 'audio'}_${Date.now()}.wav`;
             const link = document.createElement('a');
             link.href = audioUrl;
             link.download = nome;
@@ -375,8 +434,8 @@
             window.speechSynthesis?.cancel();
         });
         
-        // Texto de exemplo maior
-        elementos.texto.value = "Olá! Este é um teste de conversão de texto para áudio no formato WAV. O sistema agora suporta até 1500 caracteres, permitindo textos muito mais longos e completos. Você pode criar narrações, audiobooks, mensagens personalizadas e muito mais. A síntese é totalmente offline, garantindo sua privacidade. Ajuste a velocidade e o tom da voz conforme preferir. Experimente!";
+        // Texto de exemplo
+        elementos.texto.value = "Olá! Este conversor agora suporta mais de 40 idiomas e variações regionais. Você pode escolher entre português do Brasil ou de Portugal, inglês americano, britânico, australiano e indiano, espanhol da Espanha, México, Argentina e muitos outros. A síntese é totalmente offline!";
         atualizarContador();
     </script>
 </body>
