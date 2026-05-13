@@ -84,6 +84,16 @@
             background: rgba(168, 85, 247, 0.5);
             border-radius: 3px;
         }
+        .contador {
+            font-size: 0.7rem;
+            transition: all 0.2s ease;
+        }
+        .contador.alerta {
+            color: #f97316;
+        }
+        .contador.perigo {
+            color: #ef4444;
+        }
     </style>
 </head>
 <body class="text-white">
@@ -93,15 +103,18 @@
             <div class="text-center mb-8">
                 <div class="text-5xl mb-3">🎙️</div>
                 <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Texto → WAV</h1>
-                <p class="text-sm text-gray-400 mt-2">Síntese de voz 100% offline</p>
+                <p class="text-sm text-gray-400 mt-2">Síntese de voz 100% offline | Até 1500 caracteres</p>
             </div>
 
-            <!-- Área de texto -->
+            <!-- Área de texto com contador -->
             <div class="mb-5">
-                <label class="block text-sm font-medium text-gray-300 mb-2">
-                    <span>📝 Seu texto</span>
-                </label>
-                <textarea id="texto" rows="4" class="w-full rounded-xl p-3 text-sm text-white placeholder-gray-500 resize-none" placeholder="Digite algo... Ex: Olá, tudo bem?"></textarea>
+                <div class="flex justify-between items-center mb-2">
+                    <label class="text-sm font-medium text-gray-300">
+                        <span>📝 Seu texto</span>
+                    </label>
+                    <span id="contador" class="contador text-gray-500">0 / 1500</span>
+                </div>
+                <textarea id="texto" rows="6" class="w-full rounded-xl p-3 text-sm text-white placeholder-gray-500 resize-none" placeholder="Digite seu texto aqui... Suporte até 1500 caracteres!"></textarea>
             </div>
 
             <!-- Seleção de voz -->
@@ -119,6 +132,9 @@
                     <option value="de-DE">🇩🇪 Alemão</option>
                     <option value="it-IT">🇮🇹 Italiano</option>
                     <option value="ja-JP">🇯🇵 Japonês</option>
+                    <option value="ko-KR">🇰🇷 Coreano</option>
+                    <option value="ru-RU">🇷🇺 Russo</option>
+                    <option value="zh-CN">🇨🇳 Chinês (Simplificado)</option>
                 </select>
             </div>
 
@@ -162,7 +178,7 @@
 
             <!-- Status -->
             <div id="status" class="text-center text-xs text-gray-400 py-2">
-                ✨ Pronto para gerar áudio
+                ✨ Pronto para gerar áudio (até 1500 caracteres)
             </div>
         </div>
     </div>
@@ -181,8 +197,33 @@
             btnOuvir: document.getElementById('btnOuvir'),
             btnBaixar: document.getElementById('btnBaixar'),
             barraProgresso: document.getElementById('barraProgresso'),
-            status: document.getElementById('status')
+            status: document.getElementById('status'),
+            contador: document.getElementById('contador')
         };
+
+        const LIMITE_MAXIMO = 1500;
+
+        function atualizarContador() {
+            const len = elementos.texto.value.length;
+            elementos.contador.textContent = `${len} / ${LIMITE_MAXIMO}`;
+            
+            elementos.contador.classList.remove('alerta', 'perigo');
+            if (len > LIMITE_MAXIMO * 0.8) {
+                elementos.contador.classList.add('alerta');
+            }
+            if (len >= LIMITE_MAXIMO) {
+                elementos.contador.classList.add('perigo');
+            }
+        }
+
+        elementos.texto.addEventListener('input', () => {
+            let valor = elementos.texto.value;
+            if (valor.length > LIMITE_MAXIMO) {
+                valor = valor.slice(0, LIMITE_MAXIMO);
+                elementos.texto.value = valor;
+            }
+            atualizarContador();
+        });
 
         elementos.velocidade.addEventListener('input', () => {
             elementos.valorVelocidade.textContent = parseFloat(elementos.velocidade.value).toFixed(1);
@@ -230,8 +271,8 @@
                 recorder.start();
                 window.speechSynthesis.speak(utterance);
                 
-                const duracao = Math.max(1, texto.length / 15) * (1 / vel);
-                setTimeout(() => recorder.state === 'recording' && recorder.stop(), duracao * 1000 + 500);
+                const duracao = Math.max(2, Math.min(30, texto.length / 10)) * (1 / vel);
+                setTimeout(() => recorder.state === 'recording' && recorder.stop(), duracao * 1000 + 1000);
                 
                 const blob = await completo;
                 blob.size < 1000 ? reject(new Error("Falha")) : resolve(blob);
@@ -240,7 +281,7 @@
 
         function fallbackWAV(texto) {
             const taxa = 44100;
-            const duracao = Math.min(4, Math.max(0.8, texto.length * 0.04));
+            const duracao = Math.min(8, Math.max(1.5, texto.length * 0.03));
             const amostras = taxa * duracao;
             const buffer = new ArrayBuffer(44 + amostras * 4);
             const view = new DataView(buffer);
@@ -262,8 +303,10 @@
             view.setUint32(40, amostras * 4, true);
             
             let off = 44;
+            const freq = 440;
             for(let i=0; i<amostras; i++) {
-                const val = Math.sin(2 * Math.PI * 440 * (i/taxa)) * 32767;
+                const t = i / taxa;
+                const val = (Math.sin(2 * Math.PI * freq * t) * 0.5 + Math.sin(2 * Math.PI * (freq * 1.5) * t) * 0.3) * 32767;
                 view.setInt16(off, val, true);
                 view.setInt16(off+2, val, true);
                 off += 4;
@@ -274,12 +317,12 @@
         elementos.btnGerar.addEventListener('click', async () => {
             const texto = elementos.texto.value.trim();
             if (!texto) return atualizarStatus("⚠️ Digite um texto", "erro");
-            if (texto.length > 500) return atualizarStatus("⚠️ Máx. 500 caracteres", "erro");
+            if (texto.length > LIMITE_MAXIMO) return atualizarStatus(`⚠️ Máx. ${LIMITE_MAXIMO} caracteres`, "erro");
             
             elementos.btnGerar.disabled = true;
             elementos.btnOuvir.disabled = true;
             elementos.btnBaixar.disabled = true;
-            atualizarStatus("🎙️ Gerando áudio...", "info");
+            atualizarStatus(`🎙️ Gerando áudio (${texto.length} caracteres)...`, "info");
             progresso(20);
             
             try {
@@ -291,7 +334,7 @@
                 try {
                     audioBlob = await gerarWAV(texto, idioma, vel, tom);
                     progresso(100);
-                    atualizarStatus("✅ Áudio gerado!", "sucesso");
+                    atualizarStatus("✅ Áudio gerado com sucesso!", "sucesso");
                 } catch {
                     audioBlob = fallbackWAV(texto);
                     progresso(100);
@@ -319,7 +362,7 @@
         
         elementos.btnBaixar.addEventListener('click', () => {
             if (!audioBlob || !audioUrl) return atualizarStatus("⚠️ Gere o áudio primeiro", "erro");
-            const nome = (elementos.texto.value.trim().slice(0, 25).replace(/[^a-z0-9]/gi, '_') || 'audio') + '_' + Date.now() + '.wav';
+            const nome = (elementos.texto.value.trim().slice(0, 30).replace(/[^a-z0-9]/gi, '_') || 'audio') + '_' + Date.now() + '.wav';
             const link = document.createElement('a');
             link.href = audioUrl;
             link.download = nome;
@@ -332,7 +375,9 @@
             window.speechSynthesis?.cancel();
         });
         
-        elementos.texto.value = "Olá! Teste de conversão para WAV.";
+        // Texto de exemplo maior
+        elementos.texto.value = "Olá! Este é um teste de conversão de texto para áudio no formato WAV. O sistema agora suporta até 1500 caracteres, permitindo textos muito mais longos e completos. Você pode criar narrações, audiobooks, mensagens personalizadas e muito mais. A síntese é totalmente offline, garantindo sua privacidade. Ajuste a velocidade e o tom da voz conforme preferir. Experimente!";
+        atualizarContador();
     </script>
 </body>
 </html>
